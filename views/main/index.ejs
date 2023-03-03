@@ -22,6 +22,10 @@
         </div>
         <div class="card__actions">
           <a href="/apartments/<%= apartment.id %>" class="btn">Details</a>
+          <form action="/add-to-favorites" method="post">
+            <input type="hidden" value="<%= apartment.id %>">
+            <button type="submit">Add to favorites</button>
+          </form>
         </div>
       </article>
       <% } %>

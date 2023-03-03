@@ -1,4 +1,5 @@
 const Apartment = require("../models/apartment");
+const FavoritesList = require("../models/favorites");
 
 exports.getIndex = async (req, res, next) => {
   const apartments = await Apartment.findAll();
@@ -37,4 +38,14 @@ exports.postAddApartment = async (req, res, next) => {
     console.log(err.message);
     throw err;
   }
+};
+
+exports.postAddToFavorites = async (req, res, next) => {
+  const apartmentId = req.body.id;
+  const userId = req.user.id;
+  const apartment = await Apartment.findByPk(apartmentId);
+  const favoritesList = await FavoritesList.findOrCreate({
+    where: { UserId: userId },
+  });
+  console.log(favoritesList);
 };
