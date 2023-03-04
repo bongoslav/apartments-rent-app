@@ -5,7 +5,7 @@ const mainControllers = require("../controllers/main");
 const upload = require("../util/multerConfig");
 const authMiddleware = require("../middleware/auth");
 
-router.get("/", authMiddleware, mainControllers.getIndex);
+router.get("/", mainControllers.getIndex);
 router.get("/add-apartment", authMiddleware, mainControllers.getAddApartment);
 router.post(
   "/add-apartment",

@@ -7,6 +7,7 @@ exports.getIndex = async (req, res, next) => {
     pageTitle: "Home",
     path: "/home",
     apartments: apartments,
+    user: req.user,  // TODO: pass user obj to all views for navigation to work properly
   });
 };
 
