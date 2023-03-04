@@ -1,0 +1,26 @@
+<%- include('../includes/head.ejs') %>
+</head>
+
+<body>
+  <%- include('../includes/navigation.ejs') %>
+  <main class="centered">
+    <h1><%= apartment.title %></h1>
+    <hr>
+    <div class="image">
+      <img src="/<%= apartment.imagePath %>" alt="<%= apartment.title %>">
+    </div>
+    <h2><%= apartment.price %></h2>
+    <p><%= apartment.description %></p>
+    <% if (!isFavorite) { %>
+    <form action="/favorites" method="POST">
+      <input type="hidden" value="<%= apartment.id %>" name="apartmentId">
+      <button type="submit" class="btn">Add to favorites</button>
+    </form>
+    <% } else { %>
+    <form action="/remove-favorite" method="POST">
+      <input type="hidden" value="<%= apartment.id %>" name="apartmentId">
+      <button type="submit" class="btn">Remove from favorites</button>
+    </form>
+    <% } %>
+  </main>
+  <%- include('../includes/end.ejs') %>

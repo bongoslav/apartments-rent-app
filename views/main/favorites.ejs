@@ -6,25 +6,25 @@
   <%- include('../includes/navigation.ejs') %>
 
   <main>
-    <% if (apartments.length > 0) { %>
+    <% if (favorites.length > 0) { %>
     <div class="grid">
-      <% for (let apartment of apartments) { %>
+      <% favorites.forEach(favorite => { %>
       <article class="card apartment-item">
         <header class="card__header">
-          <h1 class="apartment__title"><%= apartment.title %></h1>
+          <h1 class="apartment__title"><%= favorite.apartment.title %></h1>
         </header>
         <div class="card__image">
-          <img src="/<%= apartment.imagePath %>" alt="<%= apartment.title %>">
+          <img src="/<%= favorite.apartment.imagePath %>" alt="<%= favorite.apartment.title %>">
         </div>
         <div class="card__content">
-          <h2 class="apartment__price">$<%= apartment.price %></h2>
-          <p class="apartment__description"><%= apartment.description %></p>
+          <h2 class="apartment__price">$<%= favorite.apartment.price %></h2>
+          <p class="apartment__description"><%= favorite.apartment.description %></p>
         </div>
         <div class="card__actions">
-          <a href="/apartments/<%= apartment.id %>" class="btn">Details</a>
+          <a href="/apartments/<%= favorite.apartment.id %>" class="btn">Details</a>
         </div>
       </article>
-      <% } %>
+      <% }) %>
     </div>
     <% } else { %>
     <h1>No apartments Found!</h1>

@@ -1,13 +1,14 @@
 const Apartment = require("../models/apartment");
-const FavoritesList = require("../models/favorites");
+const favList = require("../models/favList");
 
 exports.getIndex = async (req, res, next) => {
+  const userId = req.user.id;
   const apartments = await Apartment.findAll();
   res.render("main/index", {
     pageTitle: "Home",
     path: "/home",
     apartments: apartments,
-    user: req.user,  // TODO: pass user obj to all views for navigation to work properly
+    isLoggedIn: req.isAuthenticated(),
   });
 };
 
@@ -17,22 +18,23 @@ exports.getAddApartment = async (req, res, next) => {
     editing: false,
     path: "/add-apartment",
     errorMessage: null,
+    isLoggedIn: req.isAuthenticated(),
   });
 };
 
-// TODO: associate an apartment with a user (userId column)
-// https://stackoverflow.com/questions/72499433/can-not-get-userid-in-sequelize
 exports.postAddApartment = async (req, res, next) => {
   const title = req.body.title;
   const imagePath = req.file.path;
   const price = req.body.price;
   const description = req.body.description;
+  const userId = req.user.id;
   try {
-    const apartment = await Apartment.create({
+    await Apartment.create({
       title: title,
       price: price,
       description: description,
       imagePath: imagePath,
+      userId: userId,
     });
     res.redirect("/");
   } catch (err) {
@@ -41,12 +43,81 @@ exports.postAddApartment = async (req, res, next) => {
   }
 };
 
-exports.postAddToFavorites = async (req, res, next) => {
-  const apartmentId = req.body.id;
+exports.postAddToFavorites = (req, res, next) => {
+  const apartmentId = req.body.apartmentId;
   const userId = req.user.id;
-  const apartment = await Apartment.findByPk(apartmentId);
-  const favoritesList = await FavoritesList.findOrCreate({
-    where: { UserId: userId },
+
+  favList
+    .create({ userId, apartmentId })
+    .then((favorite) => {
+      res.redirect("/favorites");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+
+};
+
+exports.postRemoveFromFavorites = async (req, res, next) => {
+  const apartmentId = req.body.apartmentId;
+
+  await favList.destroy({where: {
+    apartmentId: apartmentId
+  }})
+  res.redirect("/");
+};
+
+exports.getFavorites = async (req, res, next) => {
+  const user = req.user;
+  const favorites = await favList.findAll({
+    where: {
+      userId: user.id,
+    },
+    include: Apartment,
   });
-  console.log(favoritesList);
+  if (!favorites) {
+    console.log("NO favList");
+  }
+  res.render("main/favorites", {
+    pageTitle: "Favorite Apartments",
+    path: "/favorites",
+    favorites: favorites,
+    isLoggedIn: req.isAuthenticated(),
+  });
+};
+
+exports.getMyApartments = async (req, res, next) => {
+  const userId = req.user.id;
+  const apartments = await Apartment.findAll({
+    where: { userId: userId },
+  });
+  res.render("main/my-apartments", {
+    pageTitle: "My apartments",
+    path: "/my-apartments",
+    isLoggedIn: req.isAuthenticated(),
+    apartments: apartments,
+  });
+};
+
+exports.getApartment = async (req, res, next) => {
+  try {
+    const apartmentId = req.params.id;
+    const apartment = await Apartment.findByPk(apartmentId);
+    const userId = req.user.id;
+
+    const favorite = await favList.findOne({
+      where: { userId: userId, apartmentId: apartmentId },
+    });
+    const isFavorite = !!favorite;
+
+    res.render("main/apartment", {
+      pageTitle: apartment.title,
+      path: `/apartments/${apartmentId}`,
+      isLoggedIn: req.isAuthenticated(),
+      apartment: apartment,
+      isFavorite: isFavorite,
+    });
+  } catch (err) {
+    throw err;
+  }
 };

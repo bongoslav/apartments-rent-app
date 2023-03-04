@@ -6,6 +6,7 @@
       <li class="main-header__item">
         <a class="<%= path === '/' ? 'active' : '' %>" href="/">Apartments</a>
       </li>
+      <% if(isLoggedIn) { %>
       <li class="main-header__item">
         <a class="<%= path === '/favorites' ? 'active' : '' %>" href="/favorites">Favorites</a>
       </li>
@@ -13,10 +14,14 @@
         <a class="<%= path === '/add-apartment' ? 'active' : '' %>" href="/add-apartment">Add apartment
         </a>
       </li>
+      <li class="main-header__item">
+        <a class="<%= path === '/my-apartments' ? 'active' : '' %>" href="/my-apartments">My apartments</a>
+      </li>
+      <% } %>
       </li>
     </ul>
     <ul class="main-header__item-list">
-      <% if (!user) { %>
+      <% if (!isLoggedIn) { %>
       <li class="main-header__item">
         <a class="<%= path === '/login' ? 'active' : '' %>" href="/login">Login</a>
       </li>

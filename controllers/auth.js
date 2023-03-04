@@ -1,12 +1,12 @@
 const bcrypr = require("bcrypt");
-const Favorites = require("../models/favorites");
+const Favorites = require("../models/favList");
 const User = require("../models/user");
 
 exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
     pageTitle: "Login",
     path: "/login",
-    user: req.session.user,
+    isLoggedIn: req.isAuthenticated(),
   });
 };
 
@@ -29,14 +29,14 @@ exports.getSignup = (req, res, next) => {
   res.render("auth/signup", {
     pageTitle: "Sign up",
     path: "/signup",
-    isAuthenticated: false,
+    isLoggedIn: req.isAuthenticated(),
   });
 };
 
 exports.postSignup = async (req, res, next) => {
   const { email, password, confirmPassword } = req.body;
   try {
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ where: { email: email } });
     if (user) {
       console.log("user with such email already exists");
       res.redirect("/signup");

@@ -31,11 +31,6 @@ app.use(
 const passport = require("./config/passport");
 app.use(passport.initialize());
 app.use(passport.session());
-app.use((req, res, next) => {
-  // console.log("SESSION: ", req.session);
-  // console.log("USER: ", req.user);
-  next();
-});
 
 app.use((req, res, next) => {
   // fixing logout error
@@ -63,23 +58,20 @@ const authRotes = require("./routes/auth");
 app.use("/", mainRoutes);
 app.use("/", authRotes);
 
-// models
+// /--------------- models -------------/
 const User = require("./models/user");
+const favList = require("./models/favList");
 const Apartment = require("./models/apartment");
-const Favorites = require("./models/favorites");
-const ApartmentFavorites = require("./models/ApartmentFavorites");
 const { strategies } = require("./config/passport");
 // models' associations
 User.hasMany(Apartment);
-User.hasOne(Favorites);
-Favorites.belongsTo(User);
-Apartment.belongsToMany(Favorites, { through: ApartmentFavorites });
+favList.belongsTo(User);
+favList.belongsTo(Apartment, { constraints: true, onDelete: "CASCADE" });
+Apartment.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 
 // TODO: add like button functionality + update in db
-// associate apartment with user (main controller)
 // add delete functionality if the apartment is user's
 // add csrf token protection (or sth else)
-// add login/signup functionality
 // add map
 // add map functionality
 
