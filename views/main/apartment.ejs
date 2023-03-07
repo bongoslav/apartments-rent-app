@@ -13,13 +13,20 @@
     <p><%= apartment.description %></p>
     <% if (!isFavorite) { %>
     <form action="/favorites" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <input type="hidden" value="<%= apartment.id %>" name="apartmentId">
       <button type="submit" class="btn">Add to favorites</button>
     </form>
     <% } else { %>
-    <form action="/remove-favorite" method="POST">
-      <input type="hidden" value="<%= apartment.id %>" name="apartmentId">
+    <form action="/remove-favorite/<%= apartment.id %>" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <button type="submit" class="btn">Remove from favorites</button>
+    </form>
+    <% } %>
+    <% if(apartment.userId === userId) { %>
+    <form action="/delete-apartment/<%= apartment.id %>" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <button type="submit" class="btn">Delete apartment</button>
     </form>
     <% } %>
   </main>

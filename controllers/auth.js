@@ -1,6 +1,6 @@
 const bcrypr = require("bcrypt");
-const Favorites = require("../models/favList");
 const User = require("../models/user");
+const passport = require("passport");
 
 exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
@@ -10,6 +10,25 @@ exports.getLogin = (req, res, next) => {
   });
 };
 
+exports.postLogin = (req, res, next) => {
+  passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login",
+    failureFlash: true,
+  })(req, res, next);
+};
+
+exports.postLogout = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      console.log(err);
+      throw err;
+    }
+  });
+  res.redirect("/");
+};
+
+// without passport:
 // exports.postLogin = async (req, res, next) => {
 //   const { email, password } = req.body;
 //   const user = await User.findOne({ email: email });

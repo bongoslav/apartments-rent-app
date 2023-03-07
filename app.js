@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const session = require("express-session");
+const csrf = require("csurf");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const sequelize = require("./util/database");
 
@@ -52,6 +53,14 @@ app.use((req, res, next) => {
     });
 });
 
+// /----------- csrf protection -----------------/
+app.use(csrf());
+
+app.use((req, res, next) => {
+  res.locals.csrfToken = req.csrfToken();
+  next()
+});
+
 // /--------------- routes -------------/
 const mainRoutes = require("./routes/main");
 const authRotes = require("./routes/auth");
@@ -69,11 +78,9 @@ favList.belongsTo(User);
 favList.belongsTo(Apartment, { constraints: true, onDelete: "CASCADE" });
 Apartment.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 
-// TODO: add like button functionality + update in db
-// add delete functionality if the apartment is user's
-// add csrf token protection (or sth else)
 // add map
 // add map functionality
+// validation & proper error handling
 
 sequelize
   .sync()

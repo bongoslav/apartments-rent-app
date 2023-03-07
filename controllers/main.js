@@ -1,8 +1,9 @@
 const Apartment = require("../models/apartment");
 const favList = require("../models/favList");
+const fs = require("fs");
+const path = require("path");
 
 exports.getIndex = async (req, res, next) => {
-  const userId = req.user.id;
   const apartments = await Apartment.findAll();
   res.render("main/index", {
     pageTitle: "Home",
@@ -55,15 +56,16 @@ exports.postAddToFavorites = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
-
 };
 
 exports.postRemoveFromFavorites = async (req, res, next) => {
-  const apartmentId = req.body.apartmentId;
+  const apartmentId = req.params.apartmentId;
 
-  await favList.destroy({where: {
-    apartmentId: apartmentId
-  }})
+  await favList.destroy({
+    where: {
+      apartmentId: apartmentId,
+    },
+  });
   res.redirect("/");
 };
 
@@ -116,8 +118,31 @@ exports.getApartment = async (req, res, next) => {
       isLoggedIn: req.isAuthenticated(),
       apartment: apartment,
       isFavorite: isFavorite,
+      userId: userId,
     });
   } catch (err) {
     throw err;
   }
+};
+
+exports.postDeleteApartment = async (req, res, next) => {
+  const apartmentId = req.params.id;
+  const apartment = await Apartment.findByPk(apartmentId);
+  fs.unlink(apartment.imagePath, (err) => {
+    if (err) throw err;
+    else {
+      console.log("Deleted image.");
+    }
+  });
+
+  try {
+    await Apartment.destroy({
+      where: { id: apartmentId },
+    });
+    console.log(`Apartment ${apartment.title} deleted from db.`);
+  } catch (err) {
+    throw err;
+  }
+
+  res.redirect("/my-apartments");
 };

@@ -32,7 +32,7 @@
       <input type="hidden" value="<%= apartment.id %>" name="apartmentId" id="apartmentId">
       <% } %>
 
-      <!-- TODO: add csrfToken -->
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <button class="btn" type="submit"><% if (editing) { %>Update Apartment<% } else { %>Add Apartment<% } %></button>
     </form>
   </main>
