@@ -9,22 +9,12 @@ exports.getLogin = (req, res, next) => {
   });
 };
 
-// exports.postLogin = async (req, res, next) => {
-//   passport.authenticate("local", {
-//     failureRedirect: "/login",
-//     // failureFlash: true,
-//   }), function(req, res) {
-//     console.log("success!!!");
-//   };
-// };
-
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
     res.redirect("/");
   });
 };
 
-// without passport:
 exports.postLogin = async (req, res, next) => {
   const { email, password } = req.body;
   const user = await User.findOne({ where: { email: email } });
@@ -40,6 +30,7 @@ exports.postLogin = async (req, res, next) => {
     res.redirect("/login");
   }
 };
+
 exports.getSignup = (req, res, next) => {
   res.render("auth/signup", {
     pageTitle: "Sign up",

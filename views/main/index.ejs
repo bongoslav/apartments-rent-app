@@ -26,6 +26,7 @@
         <div class="card__actions">
           <a href="/apartments/<%= apartment.id %>" class="btn">Details</a>
         </div>
+        <input type="hidden" class="apartment-cords" data-lat="<%= apartment.latitude %>" data-long="<%= apartment.longitude %>">
       </article>
       <% } %>
     </div>
@@ -35,11 +36,15 @@
     <div id="map"></div>
     <script>
       var map = L.map('map').setView([0, 0], 1);
-      const marker = L.marker([0, 0]).addTo(map)
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       }).addTo(map);
-      marker.setLatLng([50, 50])
+      const apartmentsCords = document.querySelectorAll('.apartment-cords')
+      console.log(apartmentsCords);
+      apartmentsCords.forEach((cords) => {
+        const marker = L.marker([cords.dataset['lat'], cords.dataset['long']]).addTo(map)
+      })
+      console.log(map);
     </script>
     <%- include('../includes/end.ejs') %>

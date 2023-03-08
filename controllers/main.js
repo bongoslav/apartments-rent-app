@@ -3,6 +3,29 @@ const favList = require("../models/favList");
 const fs = require("fs");
 const ExifImage = require("exif").ExifImage;
 
+function ConvertDMSToDD(degrees, minutes, seconds, direction) {
+  let dd = degrees + minutes / 60 + seconds / 3600;
+  if (direction == "S" || direction == "W") {
+    dd = dd * -1;
+  }
+  return dd;
+}
+
+function getLatLongDecimals(lat, long, latRef, longRef) {
+  // Calculate latitude decimal
+  const latMinute = lat[1];
+  const latDegree = lat[0];
+  const latSecond = lat[2];
+  const latFinal = ConvertDMSToDD(latDegree, latMinute, latSecond, latRef);
+
+  // Calculate longitude decimal
+  const lonDegree = long[0];
+  const lonMinute = long[1];
+  const lonSecond = long[2];
+  const lonFinal = ConvertDMSToDD(lonDegree, lonMinute, lonSecond, longRef);
+  return [latFinal, lonFinal];
+}
+
 exports.getIndex = async (req, res, next) => {
   const apartments = await Apartment.findAll();
   res.render("main/index", {
@@ -29,27 +52,44 @@ exports.postAddApartment = async (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
   const userId = req.user.id;
+  let decCords;
+  let latitude;
+  let longitude;
   try {
-    new ExifImage({ image: imagePath }, (err, exifData) => {
+    new ExifImage({ image: imagePath }, async (err, exifData) => {
       if (err) console.log(err);
       else {
-        console.log(exifData);
+        const originalLatitude = exifData.gps.GPSLatitude;
+        const originalLongitude = exifData.gps.GPSLongitude;
+        const latRef = exifData.gps.GPSLatitudeRef;
+        const longRef = exifData.gps.GPSLongitudeRef;
+
+        decCords = getLatLongDecimals(
+          originalLatitude,
+          originalLongitude,
+          latRef,
+          longRef
+        );
+        latitude = decCords[0];
+        longitude = decCords[1];
+      }
+      try {
+        await Apartment.create({
+          title: title,
+          price: price,
+          description: description,
+          imagePath: imagePath,
+          userId: userId,
+          latitude: latitude,
+          longitude: longitude,
+        });
+        res.redirect("/");
+      } catch (err) {
+        throw err;
       }
     });
   } catch (err) {
     console.log(err);
-  }
-  try {
-    await Apartment.create({
-      title: title,
-      price: price,
-      description: description,
-      imagePath: imagePath,
-      userId: userId,
-    });
-    res.redirect("/");
-  } catch (err) {
-    throw err;
   }
 };
 

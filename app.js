@@ -68,17 +68,15 @@ app.use("/", authRotes);
 const User = require("./models/user");
 const favList = require("./models/favList");
 const Apartment = require("./models/apartment");
-const { strategies } = require("./config/passport");
 // models' associations
 User.hasMany(Apartment);
 favList.belongsTo(User);
 favList.belongsTo(Apartment, { constraints: true, onDelete: "CASCADE" });
 Apartment.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 
-// fix passport.js?
-// add map - ok
-// add map functionality
+// add map functionality - check if there is gps data. if not -> do sth
 // validation & proper error handling
+// improve UX/UI :(
 // add ability to add multiple photos and scroll them
 
 sequelize
