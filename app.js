@@ -5,14 +5,12 @@ const session = require("express-session");
 const csrf = require("csrf");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const sequelize = require("./util/database");
-const passport = require("./config/passport");
 
 // setting views/ejs
 app.set("views", "views");
 app.set("view engine", "ejs");
 // setting static files
 app.use(express.static("public"));
-app.use("/images", express.static(path.join(__dirname, "images")));
 
 // --------- csrf -------- //
 const tokens = new csrf();
@@ -32,9 +30,6 @@ app.use(
     },
   })
 );
-// /----------- passport middleware -------------/
-app.use(passport.initialize());
-app.use(passport.session());
 
 // /------------ user ---------------/
 app.use((req, res, next) => {
@@ -48,7 +43,6 @@ app.use((req, res, next) => {
         return next();
       }
       req.user = user;
-      console.log(req.user);
       next();
     })
     .catch((err) => {

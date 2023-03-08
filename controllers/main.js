@@ -29,16 +29,16 @@ exports.postAddApartment = async (req, res, next) => {
   const price = req.body.price;
   const description = req.body.description;
   const userId = req.user.id;
-  // try {
-  //   new ExifImage({ image: imagePath }, (err, exifData) => {
-  //     if (err) console.log(err);
-  //     else {
-  //       console.log(exifData);
-  //     }
-  //   });
-  // } catch (err) {
-  //   console.log(err);
-  // }
+  try {
+    new ExifImage({ image: imagePath }, (err, exifData) => {
+      if (err) console.log(err);
+      else {
+        console.log(exifData);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
   try {
     await Apartment.create({
       title: title,

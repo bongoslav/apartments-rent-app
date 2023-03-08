@@ -1,22 +1,22 @@
 const bcrypr = require("bcrypt");
 const User = require("../models/user");
-const passport = require("../config/passport");
 
 exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
     pageTitle: "Login",
     path: "/login",
-    isLoggedIn: req.isLoggedIn,
+    isLoggedIn: req.session.isLoggedIn,
   });
 };
 
-exports.postLogin = async (req, res, next) => {
-  passport.authenticate("local", {
-    successRedirect: "/",
-    failureRedirect: "/login",
-    // failureFlash: true,
-  })(req, res, next);
-};
+// exports.postLogin = async (req, res, next) => {
+//   passport.authenticate("local", {
+//     failureRedirect: "/login",
+//     // failureFlash: true,
+//   }), function(req, res) {
+//     console.log("success!!!");
+//   };
+// };
 
 exports.postLogout = (req, res, next) => {
   req.session.destroy((err) => {
@@ -25,21 +25,21 @@ exports.postLogout = (req, res, next) => {
 };
 
 // without passport:
-// exports.postLogin = async (req, res, next) => {
-//   const { email, password } = req.body;
-//   const user = await User.findOne({ where: { email: email } });
-//   if (user) {
-//     const isMatch = await bcrypr.compare(password, user.password);
-//     if (isMatch) {
-//       req.session.user = user;
-//       req.session.isLoggedIn = true;
-//       return res.redirect("/");
-//     }
-//   } else {
-//     // req.flash("error", "Invalid email or password");
-//     res.redirect("/login");
-//   }
-// };
+exports.postLogin = async (req, res, next) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ where: { email: email } });
+  if (user) {
+    const isMatch = await bcrypr.compare(password, user.password);
+    if (isMatch) {
+      req.session.user = user;
+      req.session.isLoggedIn = true;
+      return res.redirect("/");
+    }
+  } else {
+    // req.flash("error", "Invalid email or password");
+    res.redirect("/login");
+  }
+};
 exports.getSignup = (req, res, next) => {
   res.render("auth/signup", {
     pageTitle: "Sign up",
