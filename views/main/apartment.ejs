@@ -11,6 +11,7 @@
     </div>
     <h2><%= apartment.price %></h2>
     <p><%= apartment.description %></p>
+    <% if (isLoggedIn) { %>
     <% if (!isFavorite) { %>
     <form action="/favorites" method="POST">
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
@@ -28,6 +29,7 @@
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
       <button type="submit" class="btn">Delete apartment</button>
     </form>
+    <% } %>
     <% } %>
   </main>
   <%- include('../includes/end.ejs') %>

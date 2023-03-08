@@ -2,9 +2,10 @@ const express = require("express");
 const path = require("path");
 const app = express();
 const session = require("express-session");
-const csrf = require("csurf");
+const csrf = require("csrf");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const sequelize = require("./util/database");
+const passport = require("./config/passport");
 
 // setting views/ejs
 app.set("views", "views");
@@ -12,6 +13,9 @@ app.set("view engine", "ejs");
 // setting static files
 app.use(express.static("public"));
 app.use("/images", express.static(path.join(__dirname, "images")));
+
+// --------- csrf -------- //
+const tokens = new csrf();
 
 app.use(express.urlencoded({ extended: true }));
 app.use("/images", express.static(path.join(__dirname, "images")));
@@ -29,21 +33,22 @@ app.use(
   })
 );
 // /----------- passport middleware -------------/
-const passport = require("./config/passport");
 app.use(passport.initialize());
 app.use(passport.session());
 
+// /------------ user ---------------/
 app.use((req, res, next) => {
   // fixing logout error
   if (!req.session.user) {
     return next();
   }
   User.findByPk(req.session.user.id)
-    .then(async (user) => {
+    .then((user) => {
       if (!user) {
         return next();
       }
       req.user = user;
+      console.log(req.user);
       next();
     })
     .catch((err) => {
@@ -54,11 +59,9 @@ app.use((req, res, next) => {
 });
 
 // /----------- csrf protection -----------------/
-app.use(csrf());
-
 app.use((req, res, next) => {
-  res.locals.csrfToken = req.csrfToken();
-  next()
+  res.locals.csrfToken = tokens.create(req.sessionID);
+  next();
 });
 
 // /--------------- routes -------------/
@@ -78,9 +81,11 @@ favList.belongsTo(User);
 favList.belongsTo(Apartment, { constraints: true, onDelete: "CASCADE" });
 Apartment.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 
-// add map
+// fix passport.js?
+// add map - ok
 // add map functionality
 // validation & proper error handling
+// add ability to add multiple photos and scroll them
 
 sequelize
   .sync()

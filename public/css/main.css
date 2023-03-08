@@ -21,6 +21,10 @@ form {
   display: inline;
 }
 
+#map {
+  height: 180px;
+}
+
 .centered {
   text-align: center;
 }

@@ -15,7 +15,7 @@ router.post(
 router.post("/favorites", authMiddleware, mainControllers.postAddToFavorites);
 router.get("/favorites", authMiddleware, mainControllers.getFavorites);
 router.get("/my-apartments", authMiddleware, mainControllers.getMyApartments);
-router.get("/apartments/:id", authMiddleware, mainControllers.getApartment);
+router.get("/apartments/:id", mainControllers.getApartment);
 router.post(
   "/remove-favorite/:id",
   authMiddleware,

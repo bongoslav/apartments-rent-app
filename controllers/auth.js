@@ -1,54 +1,50 @@
 const bcrypr = require("bcrypt");
 const User = require("../models/user");
-const passport = require("passport");
+const passport = require("../config/passport");
 
 exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
     pageTitle: "Login",
     path: "/login",
-    isLoggedIn: req.isAuthenticated(),
+    isLoggedIn: req.isLoggedIn,
   });
 };
 
-exports.postLogin = (req, res, next) => {
+exports.postLogin = async (req, res, next) => {
   passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login",
-    failureFlash: true,
+    // failureFlash: true,
   })(req, res, next);
 };
 
 exports.postLogout = (req, res, next) => {
-  req.logout((err) => {
-    if (err) {
-      console.log(err);
-      throw err;
-    }
+  req.session.destroy((err) => {
+    res.redirect("/");
   });
-  res.redirect("/");
 };
 
 // without passport:
 // exports.postLogin = async (req, res, next) => {
 //   const { email, password } = req.body;
-//   const user = await User.findOne({ email: email });
+//   const user = await User.findOne({ where: { email: email } });
 //   if (user) {
 //     const isMatch = await bcrypr.compare(password, user.password);
 //     if (isMatch) {
 //       req.session.user = user;
+//       req.session.isLoggedIn = true;
 //       return res.redirect("/");
 //     }
 //   } else {
-//     req.flash("error", "Invalid email or password");
+//     // req.flash("error", "Invalid email or password");
 //     res.redirect("/login");
 //   }
 // };
-
 exports.getSignup = (req, res, next) => {
   res.render("auth/signup", {
     pageTitle: "Sign up",
     path: "/signup",
-    isLoggedIn: req.isAuthenticated(),
+    isLoggedIn: false,
   });
 };
 
@@ -73,7 +69,6 @@ exports.postSignup = async (req, res, next) => {
       favorites: { apartments: [] },
     });
     await user.save();
-    console.log(user);
     res.redirect("/login");
   } catch (err) {
     console.log(err);

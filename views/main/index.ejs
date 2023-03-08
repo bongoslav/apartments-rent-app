@@ -1,5 +1,8 @@
 <%- include('../includes/head.ejs') %>
 <link rel="stylesheet" href="/css/apartment.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+
 </head>
 
 <body>
@@ -29,5 +32,14 @@
     <% } else { %>
     <h1>No apartments Found!</h1>
     <% } %>
-  </main>
-  <%- include('../includes/end.ejs') %>
+    <div id="map"></div>
+    <script>
+      var map = L.map('map').setView([0, 0], 1);
+      const marker = L.marker([0, 0]).addTo(map)
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+      marker.setLatLng([50, 50])
+    </script>
+    <%- include('../includes/end.ejs') %>
