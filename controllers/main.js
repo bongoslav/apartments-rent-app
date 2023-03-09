@@ -2,7 +2,6 @@ const Apartment = require("../models/apartment");
 const favList = require("../models/favList");
 const fs = require("fs");
 const { validationResult } = require("express-validator");
-const flash = require("express-flash");
 const ExifImage = require("exif").ExifImage;
 
 function ConvertDMSToDD(degrees, minutes, seconds, direction) {
