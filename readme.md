@@ -11,7 +11,7 @@ To be added (for now):
 Clone the repo and install tje dependencies.
 ```sh
 git clone https://github.com/bongoslav/apartments-rent-app.git
-cd apartment-rent-app
+cd apartments-rent-app
 ```
 ```sh
 npm install
