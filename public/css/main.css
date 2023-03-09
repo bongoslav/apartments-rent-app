@@ -22,8 +22,25 @@ form {
 }
 
 #map {
-  height: 180px;
+  height: 100vh;
 }
+
+.wrapper {
+  display: flex;
+}
+
+.left-div, .right-div {
+  width: 50%;
+}
+
+.left-div {
+  float: left;
+}
+
+.right-div {
+  float: right;
+}
+
 
 .centered {
   text-align: center;
