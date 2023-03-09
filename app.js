@@ -3,14 +3,17 @@ const path = require("path");
 const app = express();
 const session = require("express-session");
 const csrf = require("csrf");
+const flash = require('express-flash')
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const sequelize = require("./util/database");
+
 
 // setting views/ejs
 app.set("views", "views");
 app.set("view engine", "ejs");
 // setting static files
 app.use(express.static("public"));
+app.use(flash())
 
 // --------- csrf -------- //
 const tokens = new csrf();
@@ -74,10 +77,24 @@ favList.belongsTo(User);
 favList.belongsTo(Apartment, { constraints: true, onDelete: "CASCADE" });
 Apartment.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 
-// add map functionality - check if there is gps data. if not -> do sth
+// add map functionality - check if there is gps data. if not -> do sth - ok
 // validation & proper error handling
+// add edit apartment functionality
+// add pdf export
 // improve UX/UI :(
+// add pagination
 // add ability to add multiple photos and scroll them
+
+// ----------- error page middleware ----------
+app.use((error, req, res, next) => {
+  console.error(error.stack);
+  res.status(500).render("errors/500", {
+    message: error.message,
+    pageTitle: "Error",
+    path: "/500",
+    isLoggedIn: req.session.isLoggedIn,
+  });
+});
 
 sequelize
   .sync()

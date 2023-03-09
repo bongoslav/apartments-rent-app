@@ -1,6 +1,8 @@
 const Apartment = require("../models/apartment");
 const favList = require("../models/favList");
 const fs = require("fs");
+const { validationResult } = require("express-validator");
+const flash = require("express-flash");
 const ExifImage = require("exif").ExifImage;
 
 function ConvertDMSToDD(degrees, minutes, seconds, direction) {
@@ -43,22 +45,52 @@ exports.getAddApartment = async (req, res, next) => {
     path: "/add-apartment",
     errorMessage: null,
     isLoggedIn: req.session.isLoggedIn,
+    errorMessage: null,
+    validationErrorsArray: [],
+    hasError: false,
   });
 };
 
 exports.postAddApartment = async (req, res, next) => {
+ 	const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("main/add-edit-apartment", {
+      pageTitle: "Add apartment",
+      editing: false,
+      path: "/add-apartment",
+      errorMessage: errors.array()[0].msg,
+      isLoggedIn: req.session.isLoggedIn,
+      apartment: {
+        title: req.body.title,
+        price: req.body.price,
+        description: req.body.description,
+      },
+    });
+  }
   const title = req.body.title;
-  const imagePath = req.file.path;
+  const image = req.file;
+  if (!image) {
+    const error = new Error("No uploaded image.");
+    error.httpStatusCode = 500;
+    return next(error);
+  }
   const price = req.body.price;
   const description = req.body.description;
   const userId = req.user.id;
   let decCords;
   let latitude;
   let longitude;
+
+  const imagePath = image.path;
+
   try {
     new ExifImage({ image: imagePath }, async (err, exifData) => {
-      if (err) console.log(err);
-      else {
+      if (err) {
+        const error = new Error("No coordinates in photo found.");
+        error.httpStatusCode = 500;
+        return next(error);
+      } else {
         const originalLatitude = exifData.gps.GPSLatitude;
         const originalLongitude = exifData.gps.GPSLongitude;
         const latRef = exifData.gps.GPSLatitudeRef;

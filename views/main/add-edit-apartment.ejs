@@ -7,23 +7,25 @@
   <%- include('../includes/navigation.ejs') %>
 
   <main>
-    <!-- TODO: add validation -->
+    <% if (errorMessage) { %>
+    <div class="user-message user-message--error"><%= errorMessage %></div>
+    <% } %>
     <form class="apartment-form" action="/<% if (editing) { %>edit-apartment<% } else { %>add-apartment<% } %>" method="POST" enctype="multipart/form-data">
       <div class="form-control">
         <label for="title">Title</label>
-        <input class="title" type="text" name="title" id="title" value="<% if (editing) { %><%= apartment.title %><% } %>">
+        <input class="title" type="text" name="title" id="title" value="<% if (editing || errorMessage) { %><%= apartment.title %><% } %>">
       </div>
       <div class="form-control">
         <label for="image">Image</label>
-        <input type="file" name="image" id="image" value="<% if (editing) { %><%= apartment.imagePath %><% } %>">
+        <input type="file" name="image" id="image" value="<% if (editing || errorMessage) { %><%= apartment.imagePath %><% } %>">
       </div>
       <div class="form-control">
         <label for="price">Price</label>
-        <input class="price" type="number" name="price" id="price" step="0.01" value="<% if (editing) { %><%= apartment.price %><% } %>">
+        <input class="price" type="number" name="price" id="price" step="0.01" value="<% if (editing || errorMessage) { %><%= apartment.price %><% } %>">
       </div>
       <div class="form-control">
         <label for="description">Description</label>
-        <textarea class="description" name="description" id="description" rows="5"><% if (editing) { %><%= apartment.description %><% } %></textarea>
+        <textarea name="description" id="description" rows="5"><% if (editing || errorMessage) { %><%= apartment.description %><% } %></textarea>
       </div>
       <% if (editing) { %>
       <input type="hidden" value="<%= apartment.id %>" name="apartmentId" id="apartmentId">
