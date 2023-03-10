@@ -29,18 +29,19 @@ form {
   display: flex;
 }
 
-.left-div, .right-div {
+.left-div,
+.right-div {
   width: 50%;
 }
 
 .left-div {
   float: left;
+  /* margin-right: 20px; */
 }
 
 .right-div {
   float: right;
 }
-
 
 .centered {
   text-align: center;
@@ -113,14 +114,22 @@ form {
 }
 
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+  grid-gap: 20px;
 }
 
 .card {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  box-shadow: 0 4px 8px 0 rgba(210, 210, 210, 0.2);
+  transition: 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(255, 255, 255, 0.2);
+}
+
+.container {
+  padding: 2px 16px;
 }
 
 .card__header,

@@ -7,24 +7,26 @@
 
   <main>
     <% if (apartments.length > 0) { %>
-    <div class="grid">
+    <div class="wrapper">
       <% for (let apartment of apartments) { %>
-      <article class="card apartment-item">
-        <header class="card__header">
-          <h1 class="apartment__title"><%= apartment.title %></h1>
-        </header>
-        <div class="card__image">
-          <img src="/<%= apartment.imagePath %>" alt="<%= apartment.title %>">
-        </div>
-        <div class="card__content">
-          <h2 class="apartment__price">$<%= apartment.price %></h2>
-          <p class="apartment__description"><%= apartment.description %></p>
-        </div>
-        <div class="card__actions">
-          <a href="/apartments/<%= apartment.id %>" class="btn">Details</a>
-        </div>
-      </article>
-      <% } %>
+        <article class="card apartment-item">
+          <header class="card__header">
+            <h1 class="apartment__title"><%= apartment.title %></h1>
+          </header>
+          <div class="card__image">
+            <img src="/<%= apartment.imagePath %>" alt="<%= apartment.title %>">
+          </div>
+          <div class="card__content">
+            <h2 class="apartment__price">$<%= apartment.price %></h2>
+            <p class="apartment__description"><%= apartment.description %></p>
+          </div>
+          <div class="card__actions">
+            <a href="/apartments/<%= apartment.id %>" class="btn">Details</a>
+            <a href="/edit-apartment/<%= apartment.id %>" class="btn">Edit apartment</a>
+            </form>
+          </div>
+        </article>
+        <% } %>
     </div>
     <% } else { %>
     <h1>No apartments Found!</h1>

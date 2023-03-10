@@ -44,14 +44,12 @@ exports.getAddApartment = async (req, res, next) => {
     path: "/add-apartment",
     errorMessage: null,
     isLoggedIn: req.session.isLoggedIn,
-    errorMessage: null,
     validationErrorsArray: [],
-    hasError: false,
   });
 };
 
 exports.postAddApartment = async (req, res, next) => {
- 	const errors = validationResult(req);
+  const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
     return res.status(422).render("main/add-edit-apartment", {
@@ -121,6 +119,76 @@ exports.postAddApartment = async (req, res, next) => {
     });
   } catch (err) {
     console.log(err);
+  }
+};
+
+exports.getEditApartment = async (req, res, next) => {
+  try {
+    const apartmentId = req.params.id;
+    const apartment = await Apartment.findByPk(apartmentId);
+    const isLoggedIn = req.session.isLoggedIn;
+    let userId;
+
+    if (isLoggedIn) {
+      userId = req.user.id;
+      const favorite = await favList.findOne({
+        where: { userId: userId, apartmentId: apartmentId },
+      });
+    }
+    res.render("main/add-edit-apartment", {
+      pageTitle: "Edit apartment",
+      path: `/edit-apartment/${apartmentId}`,
+      isLoggedIn: req.session.isLoggedIn,
+      apartment: apartment,
+      editing: true,
+      errorMessage: null,
+      validationErrorsArray: [],
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+exports.postEditApartment = async (req, res, next) => {
+  const apartmentId = req.body.apartmentId;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const updatedDesc = req.body.description;
+  const image = req.file;
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("main/add-edit-apartment", {
+      pageTitle: "Edit apartment",
+      path: "/edit-apartment",
+      editing: true,
+      isLoggedIn: req.session.isLoggedIn,
+      apartment: {
+        id: apartmentId,
+        title: updatedTitle,
+        price: updatedPrice,
+        description: updatedDesc,
+      },
+      errorMessage: errors.array()[0].msg,
+    });
+  }
+
+  const apartment = await Apartment.findByPk(apartmentId);
+  apartment.title = updatedTitle;
+  apartment.price = updatedPrice;
+  apartment.description = updatedDesc;
+  if (image) {
+    fileHelper.deleteFile(apartment.imageUrl);
+    apartment.imageUrl = image.path;
+  }
+  try {
+    return apartment.save().then((result) => {
+      res.redirect("/my-apartments");
+    });
+  } catch (err) {
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   }
 };
 

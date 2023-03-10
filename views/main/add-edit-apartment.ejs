@@ -29,6 +29,7 @@
       </div>
       <% if (editing) { %>
       <input type="hidden" value="<%= apartment.id %>" name="apartmentId" id="apartmentId">
+      <h1><%= apartment.id %></h1>
       <% } %>
 
       <input type="hidden" name="_csrf" value="<%= csrfToken %>">
