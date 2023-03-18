@@ -5,7 +5,7 @@ const session = require("express-session");
 const csrf = require("csrf");
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const sequelize = require("./util/database");
-
+const errorHandler = require("./middleware/errorHandler");
 
 // setting views/ejs
 app.set("views", "views");
@@ -48,7 +48,6 @@ app.use((req, res, next) => {
     })
     .catch((err) => {
       console.log("USER ERR:", err);
-      // in async code snippets we don't throw but next()
       next(new Error(err));
     });
 });
@@ -75,22 +74,13 @@ favList.belongsTo(User);
 favList.belongsTo(Apartment, { constraints: true, onDelete: "CASCADE" });
 Apartment.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 
-// add edit apartment functionality
 // add pdf export
-// improve UX/UI :(
 // add pagination
+// improve UX/UI :(
 // add ability to add multiple photos and scroll them
 
 // ----------- error page middleware ----------
-app.use((error, req, res, next) => {
-  console.error(error.stack);
-  res.status(500).render("errors/500", {
-    message: error.message,
-    pageTitle: "Error",
-    path: "/500",
-    isLoggedIn: req.session.isLoggedIn,
-  });
-});
+app.use(errorHandler);
 
 sequelize
   .sync()

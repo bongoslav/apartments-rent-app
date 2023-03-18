@@ -13,4 +13,8 @@ router.post(
 router.post("/login", authMiddleware.logInValidation, authController.postLogin);
 router.post("/logout", authController.postLogout);
 
+router.get('*', (req, res) => {
+  res.redirect('/');
+});
+
 module.exports = router;

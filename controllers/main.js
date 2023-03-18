@@ -31,7 +31,7 @@ exports.getIndex = async (req, res, next) => {
   const apartments = await Apartment.findAll();
   res.render("main/index", {
     pageTitle: "Home",
-    path: "/home",
+    path: "/",
     apartments: apartments,
     isLoggedIn: req.session.isLoggedIn,
   });
@@ -145,7 +145,9 @@ exports.getEditApartment = async (req, res, next) => {
       validationErrorsArray: [],
     });
   } catch (err) {
-    throw err;
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   }
 };
 
@@ -202,7 +204,9 @@ exports.postAddToFavorites = (req, res, next) => {
       res.redirect("/favorites");
     })
     .catch((err) => {
-      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -216,7 +220,9 @@ exports.postRemoveFromFavorites = async (req, res, next) => {
       },
     });
   } catch (err) {
-    throw err;
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   }
   res.redirect("/");
 };
@@ -230,7 +236,9 @@ exports.getFavorites = async (req, res, next) => {
     include: Apartment,
   });
   if (!favorites) {
-    console.log("NO favList");
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   }
   res.render("main/favorites", {
     pageTitle: "Favorite Apartments",
@@ -277,7 +285,9 @@ exports.getApartment = async (req, res, next) => {
       userId: userId,
     });
   } catch (err) {
-    throw err;
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   }
 };
 
@@ -297,7 +307,9 @@ exports.postDeleteApartment = async (req, res, next) => {
     });
     console.log(`Apartment ${apartment.title} deleted from db.`);
   } catch (err) {
-    throw err;
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   }
 
   res.redirect("/my-apartments");
