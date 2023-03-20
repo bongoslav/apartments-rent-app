@@ -1,35 +1,37 @@
 <%- include('../includes/head.ejs') %>
+<link rel="stylesheet" href="/css/apartment.css">
+<link rel="stylesheet" href="/css/main.css">
 </head>
 
 <body>
   <%- include('../includes/navigation.ejs') %>
-  <main class="centered">
+  <div class="container">
     <h1><%= apartment.title %></h1>
     <hr>
-    <div class="image">
-      <img src="/<%= apartment.imagePath %>" alt="<%= apartment.title %>">
-    </div>
+    <img src="/<%= apartment.imagePath %>" alt="<%= apartment.title %>" class="img-fluid">
     <h2><%= apartment.price %></h2>
     <p><%= apartment.description %></p>
+    <div class="buttons-container">
     <% if (isLoggedIn) { %>
-    <% if (!isFavorite) { %>
-    <form action="/favorites" method="POST">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <input type="hidden" value="<%= apartment.id %>" name="apartmentId">
-      <button type="submit" class="btn">Add to favorites</button>
-    </form>
-    <% } else { %>
-    <form action="/remove-favorite/<%= apartment.id %>" method="POST">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <button type="submit" class="btn">Remove from favorites</button>
-    </form>
-    <% } %>
-    <% if(apartment.userId === userId) { %>
-    <form action="/delete-apartment/<%= apartment.id %>" method="POST">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <button type="submit" class="btn">Delete apartment</button>
-    </form>
-    <% } %>
-    <% } %>
-  </main>
+      <% if (!isFavorite) { %>
+      <form action="/favorites" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" value="<%= apartment.id %>" name="apartmentId">
+        <button type="submit" class="btn btn-success">Add to favorites</button>
+      </form>
+        <% } else { %>
+        <form action="/remove-favorite/<%= apartment.id %>" method="POST">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit" class="btn btn-warning">Remove from favorites</button>
+        </form>
+          <% } %>
+            <% if(apartment.userId === userId) { %>
+        <form action="/delete-apartment/<%= apartment.id %>" method="POST">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button type="submit" class="btn btn-danger">Delete apartment</button>
+        </form>
+            <% } %>
+      <% } %>
+    </div>
+  </div>
   <%- include('../includes/end.ejs') %>

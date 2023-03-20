@@ -1,5 +1,6 @@
 <%- include('../includes/head.ejs') %>
-<link rel="stylesheet" href="/css/apartment.css">
+<link rel="stylesheet" href="/css/index.css">
+<link rel="stylesheet" href="/css/main.css">
 </head>
 
 <body>
@@ -8,25 +9,23 @@
   <main>
     <% if (apartments.length > 0) { %>
     <div class="wrapper">
-      <% for (let apartment of apartments) { %>
-        <article class="card apartment-item">
-          <header class="card__header">
-            <h1 class="apartment__title"><%= apartment.title %></h1>
-          </header>
-          <div class="card__image">
-            <img src="/<%= apartment.imagePath %>" alt="<%= apartment.title %>">
+      <div class="row">
+        <% for (let apartment of apartments) { %>
+        <div class="col-lg-2">
+          <div class="card text-bg-dark mb-3 border-light h-100" style="width: 18rem;">
+            <img src="/<%= apartment.imageThumbnailPath %>" class="card-img-top img-fluid" alt="<%= apartment.title %>">
+            <div class="card-body">
+              <h5 class="card-title"><%= apartment.title %></h5>
+              <p class="card-text">$<%= apartment.price %></p>
+              <div class=" buttons-container">
+                <a href="/apartments/<%= apartment.id %>" class="btn btn-primary">Details</a>
+                <a href="/edit-apartment/<%= apartment.id %>" class="btn btn-secondary edit">Edit apartment</a>
+              </div>
+            </div>
           </div>
-          <div class="card__content">
-            <h2 class="apartment__price">$<%= apartment.price %></h2>
-            <p class="apartment__description"><%= apartment.description %></p>
-          </div>
-          <div class="card__actions">
-            <a href="/apartments/<%= apartment.id %>" class="btn">Details</a>
-            <a href="/edit-apartment/<%= apartment.id %>" class="btn">Edit apartment</a>
-            </form>
-          </div>
-        </article>
+        </div>
         <% } %>
+      </div>
     </div>
     <% } else { %>
     <h1>No apartments Found!</h1>

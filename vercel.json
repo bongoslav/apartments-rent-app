@@ -1,0 +1,13 @@
+{
+  "routes": [
+    { "src": "/(.*)", "dest": "/app.js" }
+  ],
+  "build": {},
+  "env": {},
+  "functions": {
+    "api/**/*": {
+      "memory": 512,
+      "maxDuration": 10
+    }
+  }
+}

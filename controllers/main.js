@@ -3,6 +3,8 @@ const favList = require("../models/favList");
 const fs = require("fs");
 const { validationResult } = require("express-validator");
 const ExifImage = require("exif").ExifImage;
+const imageThumbnail = require("image-thumbnail");
+const path = require("path");
 
 function ConvertDMSToDD(degrees, minutes, seconds, direction) {
   let dd = degrees + minutes / 60 + seconds / 3600;
@@ -80,6 +82,17 @@ exports.postAddApartment = async (req, res, next) => {
   let longitude;
 
   const imagePath = image.path;
+  let imageThumbnailPath;
+  try {
+    const thumbnail = await imageThumbnail(imagePath, { percentage: 5 });
+    const thumbnailName = "thumb-" + req.file.filename;
+    imageThumbnailPath = path.join("images", "thumbnails", thumbnailName);
+    fs.writeFileSync(imageThumbnailPath, thumbnail);
+  } catch (err) {
+    const error = new Error("Image thumbnail error.");
+    error.httpStatusCode = 500;
+    return next(error);
+  }
 
   try {
     new ExifImage({ image: imagePath }, async (err, exifData) => {
@@ -108,6 +121,7 @@ exports.postAddApartment = async (req, res, next) => {
           price: price,
           description: description,
           imagePath: imagePath,
+          imageThumbnailPath: imageThumbnailPath,
           userId: userId,
           latitude: latitude,
           longitude: longitude,
@@ -118,7 +132,9 @@ exports.postAddApartment = async (req, res, next) => {
       }
     });
   } catch (err) {
-    console.log(err);
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
   }
 };
 

@@ -74,11 +74,6 @@ favList.belongsTo(User);
 favList.belongsTo(Apartment, { constraints: true, onDelete: "CASCADE" });
 Apartment.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
 
-// add pdf export
-// add pagination
-// improve UX/UI :(
-// add ability to add multiple photos and scroll them
-
 // ----------- error page middleware ----------
 app.use(errorHandler);
 

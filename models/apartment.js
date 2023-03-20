@@ -17,6 +17,10 @@ const Apartment = sequelize.define("apartment", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  imageThumbnailPath: {
+    type: Sequelize.STRING,
+    // allowNull: false,
+  },
   description: {
     type: Sequelize.STRING,
     allowNull: false,

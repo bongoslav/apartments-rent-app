@@ -1,0 +1,32 @@
+#map {
+  position: relative;
+  border-radius: 8px;
+  height: 800px;
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+  grid-gap: 20px;
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(210, 210, 210, 0.2);
+  transition: 0.3s;
+}
+
+.container {
+  padding: 2px 16px;
+}
+
+.card-img-top {
+  height: 100%;
+  width: auto;
+}
+
+.cards-container {
+  overflow: auto;
+  padding: 0 15px;
+  height: calc(100vh - 145px);
+}

@@ -1,6 +1,7 @@
 <%- include('../includes/head.ejs') %>
-<link rel="stylesheet" href="/css/apartment.css">
+<link rel="stylesheet" href="/css/index.css">
 <link rel="stylesheet" href="/css/main.css">
+<!-- map includes -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
 </head>
@@ -8,32 +9,35 @@
 <body>
   <%- include('../includes/navigation.ejs') %>
   <main>
-    <div class="wrapper">
-      <% if (apartments.length > 0) { %>
-      <div class="grid left-div">
-        <% for (let apartment of apartments) { %>
-        <article class="card apartment-item">
-          <header class="card__header">
-            <h1 class="apartment__title"><%= apartment.title %></h1>
-          </header>
-          <div class="card__image">
-            <img src="/<%= apartment.imagePath %>" alt="<%= apartment.title %>">
+    <div class="row">
+      <div class="col">
+        <% if (apartments.length > 0) { %>
+        <div class="cards-container">
+          <div class="row">
+            <% for (let apartment of apartments) { %>
+            <div class="col-lg-4">
+              <div class="card text-bg-dark mb-3 border-light h-100" style="width: 18rem;">
+                <img src="/<%= apartment.imageThumbnailPath %>" class="card-img-top img-fluid" alt="<%= apartment.title %>">
+                <div class="card-body">
+                  <h5 class="card-title"><%= apartment.title %></h5>
+                  <p class="card-text">$<%= apartment.price %></p>
+                  <div class="card-footer text-center">
+                    <a href="/apartments/<%= apartment.id %>" class="btn btn-primary">Details</a>
+                  </div>
+                  <input type="hidden" class="apartment-cords" data-lat="<%= apartment.latitude %>" data-long="<%= apartment.longitude %>">
+                </div>
+              </div>
+            </div>
+            <% } %>
           </div>
-          <div class="card__content">
-            <h2 class="apartment__price">$<%= apartment.price %></h2>
-            <p class="apartment__description"><%= apartment.description %></p>
-          </div>
-          <div class="card__actions">
-            <a href="/apartments/<%= apartment.id %>" class="btn">Details</a>
-          </div>
-          <input type="hidden" class="apartment-cords" data-lat="<%= apartment.latitude %>" data-long="<%= apartment.longitude %>">
-        </article>
+        </div>
+        <% } else { %>
+        <h1>No apartments Found!</h1>
         <% } %>
       </div>
-      <div id="map" class="right-div"></div>
-      <script src="js/map.js"></script>
-      <% } else { %>
-      <h1>No apartments Found!</h1>
-      <% } %>
-      <%- include('../includes/end.ejs') %>
+      <div class="col">
+        <div id="map" class="right-div"></div>
+        <script src="js/map.js"></script>
+      </div>
     </div>
+    <%- include('../includes/end.ejs') %>

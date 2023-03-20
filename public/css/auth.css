@@ -1,6 +1,19 @@
-.login-form {
-  width: 20rem;
-  max-width: 90%;
+.auth-container {
+  margin: 20px 0;
+}
+
+.user-message {
   margin: auto;
-  display: block;
+  width: 90%;
+  border: 1px solid #4771fa;
+  padding: 0.5rem;
+  border-radius: 3px;
+  background: #b9c9ff;
+  text-align: center;
+}
+
+.user-message--error {
+  border-color: red;
+  background: rgb(255, 176, 176);
+  color: red;
 }

@@ -1,5 +1,6 @@
 <%- include('../includes/head.ejs') %>
-<link rel="stylesheet" href="/css/apartment.css">
+<link rel="stylesheet" href="/css/main.css">
+<link rel="stylesheet" href="/css/index.css">
 </head>
 
 <body>
@@ -7,27 +8,26 @@
 
   <main>
     <% if (favorites.length > 0) { %>
-    <div class="grid">
+      <div class="row">
       <% favorites.forEach(favorite => { %>
-      <article class="card apartment-item">
-        <header class="card__header">
-          <h1 class="apartment__title"><%= favorite.apartment.title %></h1>
-        </header>
-        <div class="card__image">
-          <img src="/<%= favorite.apartment.imagePath %>" alt="<%= favorite.apartment.title %>">
+      <div class="col-lg-2">
+        <div class="card text-bg-dark mb-3 border-light h-100" style="width: 18rem;">
+          <img src="/<%= favorite.apartment.imageThumbnailPath %>" class="card-img-top img-fluid" alt="<%= favorite.apartment.title %>">
+          <div class="card-body">
+            <h5 class="card-title"><%= favorite.apartment.title %></h5>
+            <p class="card-text">$<%= favorite.apartment.price %></p>
+            <div class="card-footer text-center">
+              <a href="/apartments/<%= favorite.apartment.id %>" class="btn btn-primary">Details</a>
+            </div>
+          </div>
         </div>
-        <div class="card__content">
-          <h2 class="apartment__price">$<%= favorite.apartment.price %></h2>
-          <p class="apartment__description"><%= favorite.apartment.description %></p>
-        </div>
-        <div class="card__actions">
-          <a href="/apartments/<%= favorite.apartment.id %>" class="btn">Details</a>
-        </div>
-      </article>
+      </div>
       <% }) %>
     </div>
+    </>
     <% } else { %>
     <h1>No apartments Found!</h1>
     <% } %>
+    </div>
   </main>
   <%- include('../includes/end.ejs') %>

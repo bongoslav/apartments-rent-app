@@ -1,27 +1,24 @@
-.apartment-form {
-    width: 20rem;
-    max-width: 90%;
-    margin: auto;
-    display: block;
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,700");
+
+* {
+  box-sizing: border-box;
 }
 
-.apartment-item {
-    width: 20rem;
-    max-width: 95%;
-    margin: 1rem;
+.container {
+  width: 500px;
+}
+h1,
+h2,
+p {
+  text-align: center;
 }
 
-.apartment__title {
-    font-size: 1.2rem;
-    text-align: center;
+.buttons-container{
+  display: inline;
+  display: flex;
+  justify-content: center;
 }
 
-.apartment__price {
-    text-align: center;
-    color: #d8ffdd;
-    margin-bottom: 0.5rem;
-}
-
-.apartment__description {
-    text-align: center;
+.btn-danger {
+  margin-left: 40px;
 }

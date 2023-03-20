@@ -1,30 +1,36 @@
 <%- include('../includes/head.ejs') %>
-<link rel="stylesheet" href="/css/forms.css">
+<link rel="stylesheet" href="/css/main.css">
 <link rel="stylesheet" href="/css/auth.css">
 </head>
 
 <body>
   <%- include('../includes/navigation.ejs') %>
 
-  <main>
-    <% if (errorMessage) { %>
-    <div class="user-message user-message--error"><%= errorMessage %></div>
-    <% } %>
-    <form class="login-form" action="/signup" method="POST" novalidate>
+  <!-- !!!!!!!!!!!!!!!!!!!!!!!! -->
+  <div class="container-fluid h-100 auth-container">
+    <div class="row h-100 justify-content-center">
+      <div class="col-sm-4 col-md-2">
+        <% if (errorMessage) { %>
+        <div class="user-message user-message--error"><%= errorMessage %></div>
+        <% } %>
+        <form class="login-form" action="/signup" method="POST" novalidate>
           <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <div class="form-control">
-        <label for="email">E-Mail</label>
-        <input class="email" type="email" name="email" id="email" value="<%= email %>">
+          <div class="mb-3">
+            <label for="email" class="form-label">E-Mail</label>
+            <input class="form-control" type="email" name="email" id="email" value="<%= email %>">
+          </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input class="form-control" type="password" name="password" id="password">
+          </div>
+          <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input class="form-control" type="password" name="confirmPassword" id="confirmPassword">
+          </div>
+          <button class="btn btn-dark" type="submit">Sign up</button>
+        </form>
       </div>
-      <div class="form-control">
-        <label for="password">Password</label>
-        <input class="password" type="password" name="password" id="password">
-      </div>
-      <div class="form-control">
-        <label for="confirmPassword">Confirm Password</label>
-        <input class="confirmPassword" type="password" name="confirmPassword" id="confirmPassword">
-      </div>
-      <button class="btn" type="submit">Sign up</button>
-    </form>
-  </main>
+    </div>
+  </div>
+  <!-- !!!!!!!!!!!!!!!!!!!!!!!! -->
   <%- include('../includes/end.ejs') %>
