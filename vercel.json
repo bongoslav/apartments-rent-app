@@ -11,6 +11,6 @@
     "DB_NAME": "database.sqlite",
     "DB_STORAGE": "file",
     "DB_DIALECT": "sqlite",
-    "DB_LOGGING": false
+    "DB_LOGGING": "false"
   }
 }
